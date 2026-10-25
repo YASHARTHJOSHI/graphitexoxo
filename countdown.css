@@ -166,8 +166,8 @@ html, body {
 .bg-vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at center, transparent 30%, rgba(2, 4, 8, 0.72) 80%, #020408 100%);
-  opacity: 0.20;
+  background: radial-gradient(ellipse at center, transparent 35%, rgba(2, 4, 8, 0.70) 80%, #020408 100%);
+  opacity: 0.35;
   pointer-events: none;
   z-index: 6;
 }
