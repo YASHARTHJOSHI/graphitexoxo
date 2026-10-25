@@ -1,0 +1,1471 @@
+/* ==========================================================================
+   GRAPHITE '26 — 24-HOUR HACKATHON ARENA COUNTDOWN WINDOW
+   Art Direction: Spider-Verse Cyberpunk HUD & AAA Stage Display
+   Automated Protocol: Locked until 28 Oct 2026, 10:00:00 AM IST
+   ========================================================================== */
+
+:root {
+  --bg-dark: #030509;
+  --bg-card: rgba(8, 14, 24, 0.50);
+  --bg-card-border: rgba(255, 255, 255, 0.08);
+
+  --accent-red: #ff2a3b;
+  --accent-red-glow: rgba(255, 42, 59, 0.45);
+  --accent-red-subtle: rgba(255, 42, 59, 0.12);
+
+  --accent-cyan: #00d2ff;
+  --accent-cyan-glow: rgba(0, 210, 255, 0.4);
+  --accent-cyan-subtle: rgba(0, 210, 255, 0.1);
+
+  --accent-green: #00ffaa;
+  --accent-green-glow: rgba(0, 255, 170, 0.4);
+
+  --accent-amber: #ffb703;
+  --accent-amber-glow: rgba(255, 183, 3, 0.4);
+
+  --text-primary: #ffffff;
+  --text-secondary: #94a3b8;
+  --text-muted: #475569;
+
+  --font-game: 'Bebas Neue', sans-serif;
+  --font-tech: 'Rajdhani', sans-serif;
+  --font-body: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: 160ms ease;
+  --transition-smooth: 320ms var(--ease-spring);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  min-height: -webkit-fill-available;
+  overflow: hidden;
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ==========================================================================
+   AMBIENT CINEMATIC BACKGROUND STAGE & SPIDER-MAN CAMPUS VIDEO
+   ========================================================================== */
+
+.countdown-bg-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: #020408;
+}
+
+/* Spider-Man Campus Video Background */
+.video-bg-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.countdown-bg-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  min-width: 100%;
+  min-height: 100%;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  object-position: center center;
+  opacity: 0.70;
+  filter: contrast(1.18) brightness(0.85) saturate(1.28);
+  transition: opacity 0.8s ease, filter 0.6s ease;
+  pointer-events: none;
+  background-color: #020408;
+}
+
+.video-cinematic-dimmer {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(3, 5, 9, 0.45) 0%, rgba(3, 5, 9, 0.80) 70%, #030509 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.bg-gradient-glow {
+  position: absolute;
+  width: 65vw;
+  height: 65vh;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.22;
+  pointer-events: none;
+  will-change: transform;
+  z-index: 3;
+}
+
+.red-glow {
+  top: -15%;
+  left: -10%;
+  background: radial-gradient(circle, var(--accent-red) 0%, transparent 70%);
+  animation: glowFloat 14s ease-in-out infinite alternate;
+}
+
+.cyan-glow {
+  bottom: -15%;
+  right: -10%;
+  background: radial-gradient(circle, var(--accent-cyan) 0%, transparent 70%);
+  animation: glowFloat 16s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes glowFloat {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(5vw, 4vh, 0) scale(1.08); }
+  100% { transform: translate3d(-4vw, 6vh, 0) scale(0.95); }
+}
+
+.bg-grid-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.55;
+  z-index: 4;
+}
+
+.bg-scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    rgba(0, 0, 0, 0.12) 3px,
+    rgba(0, 0, 0, 0.12) 4px
+  );
+  opacity: 0.35;
+  z-index: 5;
+}
+
+.bg-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 30%, rgba(2, 4, 8, 0.72) 80%, #020408 100%);
+  z-index: 6;
+}
+
+.timer-particle-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.45;
+  z-index: 7;
+}
+
+/* Spiderweb Corner Accents */
+.spider-corners {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.corner-web {
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  opacity: 0.18;
+}
+
+.corner-tl {
+  top: -8px;
+  left: -8px;
+  color: var(--accent-red);
+}
+
+.corner-tr {
+  top: -8px;
+  right: -8px;
+  color: var(--accent-cyan);
+  transform: scaleX(-1);
+}
+
+.web-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.web-spokes, .web-rings {
+  stroke: currentColor;
+  stroke-width: 0.9px;
+  fill: none;
+}
+
+/* ==========================================================================
+   VIEWPORT SHELL & TOP HUD
+   ========================================================================== */
+
+.timer-viewport {
+  position: relative;
+  z-index: 10;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.4rem 2.8rem 1rem;
+  box-sizing: border-box;
+}
+
+.timer-hud-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--bg-card-border);
+  position: relative;
+}
+
+.timer-hud-top::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 220px;
+  height: 2px;
+  background: var(--accent-red);
+  box-shadow: 0 0 12px var(--accent-red-glow);
+}
+
+.hud-brand-block {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+/* GEHU Bhimtal Top-Left University Badge */
+.hud-university-link {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  outline: none;
+  transition: transform var(--transition-fast);
+}
+
+.hud-university-link:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+.hud-university-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 6px 24px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 42, 59, 0.4);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45), 0 0 12px rgba(255, 42, 59, 0.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all var(--transition-smooth);
+}
+
+.hud-university-link:hover .hud-university-badge {
+  background: #ffffff;
+  border-color: var(--accent-red);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6), 0 0 18px rgba(255, 42, 59, 0.35);
+  transform: translateY(-1px);
+}
+
+.gehu-bhimtal-logo {
+  height: 48px;
+  width: auto;
+  max-width: 220px;
+  display: block;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.hud-brand-divider {
+  width: 1px;
+  height: 32px;
+  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.25), transparent);
+  margin: 0 0.15rem;
+}
+
+.hud-brand-crest {
+  width: 40px;
+  height: 40px;
+  background: var(--accent-red-subtle);
+  border: 1px solid rgba(255, 42, 59, 0.45);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-red);
+  box-shadow: 0 0 14px var(--accent-red-subtle);
+}
+
+.spider-crest-svg {
+  width: 24px;
+  height: 24px;
+  filter: drop-shadow(0 0 4px var(--accent-red-glow));
+}
+
+.hud-brand-title {
+  font-family: var(--font-game);
+  font-size: 1.85rem;
+  letter-spacing: 2px;
+  line-height: 1;
+}
+
+.highlight-red {
+  color: var(--accent-red);
+  text-shadow: 0 0 10px var(--accent-red-glow);
+}
+
+.hud-brand-sub {
+  font-family: var(--font-tech);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* Status Badges */
+.hud-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.35rem 1.1rem;
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  background: rgba(14, 20, 32, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  transition: all var(--transition-smooth);
+}
+
+.status-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.status-locked {
+  border-color: rgba(255, 183, 3, 0.5);
+  color: var(--accent-amber);
+  box-shadow: 0 0 16px rgba(255, 183, 3, 0.2);
+}
+.status-locked .status-pulse-dot {
+  background: var(--accent-amber);
+  box-shadow: 0 0 10px var(--accent-amber);
+  animation: dotPulse 1.6s ease-in-out infinite;
+}
+
+.status-running {
+  border-color: rgba(0, 255, 170, 0.55);
+  color: var(--accent-green);
+  box-shadow: 0 0 20px rgba(0, 255, 170, 0.25);
+}
+.status-running .status-pulse-dot {
+  background: var(--accent-green);
+  box-shadow: 0 0 12px var(--accent-green);
+  animation: dotPulse 1.2s ease-in-out infinite;
+}
+
+.status-complete {
+  border-color: rgba(255, 42, 59, 0.8);
+  color: var(--accent-red);
+  background: rgba(40, 8, 12, 0.85);
+  box-shadow: 0 0 24px rgba(255, 42, 59, 0.4);
+}
+.status-complete .status-pulse-dot {
+  background: var(--accent-red);
+  box-shadow: 0 0 12px var(--accent-red);
+  animation: dotBlink 0.4s infinite;
+}
+
+@keyframes dotPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.7); }
+}
+
+@keyframes dotBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.1; }
+}
+
+/* Top Right Controls & Presenter Badge */
+.hud-top-right-group {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.hud-presenter-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 6px 24px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 210, 255, 0.5);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45), 0 0 14px rgba(0, 210, 255, 0.22);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all var(--transition-smooth);
+}
+
+.hud-presenter-badge:hover {
+  background: #ffffff;
+  border-color: var(--accent-cyan);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 210, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+.sure-media-logo {
+  height: 48px;
+  width: auto;
+  max-width: 200px;
+  display: block;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.hud-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.hud-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(14, 22, 36, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  color: var(--text-secondary);
+  font-family: var(--font-tech);
+  font-weight: 700;
+  font-size: 0.74rem;
+  letter-spacing: 1px;
+  padding: 0.38rem 0.8rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.hud-action-btn:hover {
+  background: rgba(22, 34, 56, 0.85);
+  border-color: rgba(0, 210, 255, 0.4);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.hud-action-btn .btn-icon {
+  width: 15px;
+  height: 15px;
+}
+
+/* ==========================================================================
+   CENTER OF THE SCREEN: THE 24-HOUR COUNTDOWN CARD
+   ========================================================================== */
+
+.timer-center-stage {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0;
+  width: 100%;
+}
+
+.timer-terminal-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 1000px;
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 210, 255, 0.28);
+  border-radius: 16px;
+  padding: 1.8rem 2.8rem 2.2rem;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.50),
+    0 0 35px rgba(0, 210, 255, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: border-color var(--transition-smooth), box-shadow var(--transition-smooth);
+}
+
+/* Top of Countdown: GRAPHITE '26 Hero Artwork Logo */
+.countdown-hero-logo-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0.6rem;
+  width: 100%;
+}
+
+.countdown-hero-logo {
+  height: clamp(55px, 8vh, 92px);
+  width: auto;
+  max-width: min(85vw, 340px);
+  object-fit: contain;
+  filter: drop-shadow(0 0 16px rgba(255, 42, 59, 0.45)) drop-shadow(0 4px 12px rgba(0, 0, 0, 0.8));
+  user-select: none;
+  -webkit-user-drag: none;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.countdown-hero-logo:hover {
+  transform: scale(1.03);
+  filter: drop-shadow(0 0 24px rgba(255, 42, 59, 0.7)) drop-shadow(0 0 14px rgba(255, 183, 3, 0.4));
+}
+
+.terminal-heading {
+  font-family: var(--font-tech);
+  font-weight: 700;
+  font-size: clamp(0.78rem, 1.2vw, 1.05rem);
+  letter-spacing: 3px;
+  color: #cbd5e1;
+  text-transform: uppercase;
+  margin-bottom: 1.4rem;
+  text-align: center;
+}
+
+/* ==========================================================================
+   MASSIVE DIGITAL COUNTDOWN CLOCK DISPLAY (DAYS : HOURS : MINS : SECS)
+   ========================================================================== */
+
+.countdown-clock-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1.8vw, 24px);
+  width: 100%;
+}
+
+.time-segment-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1 1 0;
+  max-width: 195px;
+  min-width: 0;
+}
+
+.digit-plate {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background: rgba(4, 8, 16, 0.56);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  padding: clamp(0.7rem, 2vh, 1.5rem) 0.4rem;
+  box-shadow: 
+    0 10px 28px rgba(0, 0, 0, 0.45),
+    inset 0 0 18px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+  transition: all var(--transition-fast);
+}
+
+.digit-plate::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.04), transparent);
+  pointer-events: none;
+}
+
+.digit-plate::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.45);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.digit-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(2.4rem, 6.2vw, 5.6rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -1px;
+  color: #ffffff;
+  text-shadow: 
+    0 0 18px rgba(255, 255, 255, 0.4),
+    0 0 45px rgba(0, 210, 255, 0.35);
+  transition: color var(--transition-fast), text-shadow var(--transition-fast);
+}
+
+.digit-unit {
+  font-family: var(--font-tech);
+  font-weight: 700;
+  font-size: clamp(0.68rem, 1.1vw, 0.88rem);
+  letter-spacing: 3px;
+  color: var(--text-secondary);
+  margin-top: 0.75rem;
+  text-align: center;
+}
+
+/* Colon Dividers */
+.time-colon {
+  font-family: var(--font-mono);
+  font-size: clamp(2rem, 5vw, 4.4rem);
+  font-weight: 700;
+  color: var(--accent-red);
+  text-shadow: 0 0 16px var(--accent-red-glow);
+  margin-top: -1.2rem;
+  opacity: 0.9;
+  animation: colonBlink 1s ease-in-out infinite;
+}
+
+@keyframes colonBlink {
+  0%, 100% { opacity: 0.95; }
+  50% { opacity: 0.25; }
+}
+
+/* Telemetry Row */
+.timer-telemetry-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.telemetry-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(10, 16, 28, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 0.35rem 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+}
+
+.telemetry-chip .chip-label {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.telemetry-chip .chip-val {
+  color: var(--accent-cyan);
+  font-weight: 700;
+}
+
+/* Linear Progress Bar */
+.timer-progress-track {
+  position: relative;
+  width: 100%;
+  max-width: 620px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: visible;
+  margin-bottom: 1.8rem;
+}
+
+.timer-progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, var(--accent-amber) 0%, var(--accent-red) 100%);
+  border-radius: 3px;
+  box-shadow: 0 0 12px var(--accent-amber-glow);
+  transition: width 0.3s linear;
+}
+
+.active-timer .timer-progress-fill {
+  background: linear-gradient(90deg, var(--accent-cyan) 0%, var(--accent-green) 100%);
+  box-shadow: 0 0 12px var(--accent-green-glow);
+}
+
+.timer-progress-glow {
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 12px var(--accent-amber);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  transition: left 0.3s linear;
+}
+
+/* ==========================================================================
+   AUTOMATED LOCK & ACTIVATION CARD (REPLACES START BUTTON)
+   ========================================================================== */
+
+.lock-status-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+  max-width: 680px;
+  background: rgba(14, 20, 32, 0.85);
+  border: 1px solid rgba(255, 183, 3, 0.35);
+  border-radius: 10px;
+  padding: 1.1rem 1.6rem;
+  box-shadow: 
+    0 8px 30px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(255, 183, 3, 0.1);
+  transition: all var(--transition-smooth);
+}
+
+.active-timer .lock-status-card {
+  border-color: rgba(0, 255, 170, 0.4);
+  background: rgba(10, 24, 20, 0.85);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 24px rgba(0, 255, 170, 0.15);
+}
+
+.lock-card-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background: rgba(255, 183, 3, 0.15);
+  border: 1px solid rgba(255, 183, 3, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-amber);
+  box-shadow: 0 0 14px var(--accent-amber-glow);
+  flex-shrink: 0;
+}
+
+.active-timer .lock-card-icon-wrap {
+  background: rgba(0, 255, 170, 0.15);
+  border-color: rgba(0, 255, 170, 0.45);
+  color: var(--accent-green);
+  box-shadow: 0 0 14px var(--accent-green-glow);
+}
+
+.lock-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.lock-card-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  flex: 1;
+}
+
+.lock-card-title {
+  font-family: var(--font-tech);
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--accent-amber);
+  line-height: 1.2;
+}
+
+.active-timer .lock-card-title {
+  color: var(--accent-green);
+}
+
+.lock-card-desc {
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin-top: 3px;
+}
+
+.lock-countdown-to-unlock {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  padding: 0.3rem 0.8rem;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 5px;
+}
+
+.unlock-countdown-tag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.unlock-countdown-digits {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--accent-cyan);
+  text-shadow: 0 0 10px var(--accent-cyan-glow);
+  letter-spacing: 1px;
+}
+
+/* ==========================================================================
+   BOTTOM LEFT: LIVE INDIAN STANDARD TIME (IST) TELEMETRY DOCK
+   ========================================================================== */
+
+.timer-bottom-left-dock {
+  position: fixed;
+  bottom: clamp(20px, 3.8vh, 36px);
+  left: clamp(24px, 3.8vw, 44px);
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.telemetry-ist-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(10, 16, 28, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(0, 210, 255, 0.25);
+  border-radius: 8px;
+  padding: 0.65rem 1.2rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.ist-pulse-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 10px var(--accent-cyan);
+  animation: dotPulse 1.4s infinite;
+}
+
+.ist-text-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.ist-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.ist-time-val {
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 1.5px;
+  margin-top: 2px;
+}
+
+.official-security-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  padding-left: 4px;
+}
+
+/* ==========================================================================
+   BOTTOM RIGHT: VENUE & TEST PREVIEW TELEMETRY
+   ========================================================================== */
+
+.timer-bottom-right-dock {
+  position: fixed;
+  bottom: clamp(20px, 3.8vh, 36px);
+  right: clamp(24px, 3.8vw, 44px);
+  z-index: 40;
+}
+
+.venue-info-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  gap: 4px;
+}
+
+.venue-title {
+  font-family: var(--font-tech);
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+  color: #ffffff;
+}
+
+.venue-sub {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.preview-sim-pill {
+  margin-top: 6px;
+  background: rgba(14, 20, 32, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  padding: 0.28rem 0.6rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.preview-sim-pill:hover {
+  background: rgba(24, 34, 52, 0.95);
+  border-color: var(--accent-cyan);
+  color: #ffffff;
+}
+
+.preview-sim-pill.active-sim {
+  border-color: var(--accent-green);
+  color: var(--accent-green);
+}
+
+/* ==========================================================================
+   BOTTOM LEFT CORNER: ARENA SEQUENCE CONTROLS (SPIDER-VERSE HUD THEME)
+   ========================================================================== */
+
+.timer-bottom-left-control {
+  position: fixed;
+  bottom: clamp(16px, 2.8vh, 28px);
+  left: clamp(18px, 2.8vw, 36px);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-arena-start {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(14, 20, 32, 0.88);
+  border: 1px solid rgba(255, 42, 59, 0.55);
+  border-left: 3px solid var(--accent-red);
+  border-radius: 8px;
+  color: #ffffff;
+  font-family: var(--font-tech);
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 2.2px;
+  text-transform: uppercase;
+  padding: 0.62rem 1.4rem;
+  cursor: pointer;
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.65),
+    0 0 20px rgba(255, 42, 59, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: transform 0.2s var(--ease-spring), box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  user-select: none;
+  -webkit-user-select: none;
+  outline: none;
+}
+
+.btn-arena-start:hover {
+  transform: translateY(-2px);
+  background: rgba(22, 10, 18, 0.95);
+  border-color: #ff2a3b;
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.75),
+    0 0 28px rgba(255, 42, 59, 0.55),
+    inset 0 0 14px rgba(255, 42, 59, 0.22);
+}
+
+.btn-arena-start:active {
+  transform: translateY(1px);
+}
+
+.btn-arena-start:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 3px;
+}
+
+.btn-pulse-glow {
+  position: absolute;
+  inset: -3px;
+  border-radius: 10px;
+  background: transparent;
+  border: 1px solid var(--accent-red);
+  opacity: 0.6;
+  animation: startAuraPulse 2.2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes startAuraPulse {
+  0% { transform: scale(0.98); opacity: 0.7; }
+  50% { transform: scale(1.06); opacity: 0; }
+  100% { transform: scale(1.1); opacity: 0; }
+}
+
+.btn-start-icon {
+  width: 13px;
+  height: 13px;
+  fill: var(--accent-red);
+  filter: drop-shadow(0 0 6px var(--accent-red));
+  transition: transform 0.2s ease, fill 0.2s ease;
+}
+
+.btn-arena-start:hover .btn-start-icon {
+  transform: scale(1.2);
+  fill: #ffffff;
+}
+
+/* Once Started: Status Display (No Pause Allowed) */
+.btn-arena-start.state-running {
+  pointer-events: none;
+  cursor: default;
+  background: rgba(8, 18, 24, 0.88);
+  border-color: rgba(0, 255, 170, 0.45);
+  border-left: 3px solid var(--accent-green);
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.65),
+    0 0 20px rgba(0, 255, 170, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  color: var(--accent-green);
+}
+
+.btn-arena-start.state-running .btn-start-icon {
+  fill: var(--accent-green);
+  filter: drop-shadow(0 0 6px var(--accent-green));
+}
+
+.btn-arena-start.state-running .btn-pulse-glow {
+  border-color: var(--accent-green);
+}
+
+/* ==========================================================================
+   BOTTOM HUD BAR & KEYBOARD GUIDE
+   ========================================================================== */
+
+.timer-hud-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--bg-card-border);
+  position: relative;
+  z-index: 20;
+}
+
+/* ==========================================================================
+   BOTTOM CENTER: PLATFORM & COMMUNITY PARTNERS LOGO ROW
+   ========================================================================== */
+
+.bottom-center-partners {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  z-index: 30;
+  pointer-events: auto;
+}
+
+.partners-row-label {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+
+.partners-logo-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 16, 28, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  padding: 8px 36px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.55), 0 0 16px rgba(255, 255, 255, 0.08);
+  transition: all var(--transition-fast);
+}
+
+.partners-logo-badge:hover {
+  background: rgba(16, 24, 40, 0.90);
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.65), 0 0 20px rgba(0, 210, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.sponsors-row-img {
+  height: 52px;
+  width: auto;
+  max-width: 620px;
+  object-fit: contain;
+  display: block;
+  filter: brightness(1.12) drop-shadow(0 0 8px rgba(255, 255, 255, 0.35));
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* ==========================================================================
+   FINISH / ZERO STATE OVERLAY MODAL
+   ========================================================================== */
+
+.countdown-finish-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(2, 4, 8, 0.88);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: overlayFade 0.4s var(--ease-spring);
+}
+
+@keyframes overlayFade {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.finish-dialog-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 580px;
+  background: rgba(14, 18, 28, 0.95);
+  border: 2px solid var(--accent-red);
+  border-radius: 16px;
+  padding: 2.8rem 2.5rem;
+  box-shadow: 
+    0 24px 70px rgba(0, 0, 0, 0.8),
+    0 0 50px rgba(255, 42, 59, 0.4);
+}
+
+.finish-badge {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  color: var(--accent-red);
+  background: rgba(255, 42, 59, 0.12);
+  border: 1px solid rgba(255, 42, 59, 0.4);
+  border-radius: 9999px;
+  padding: 0.35rem 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.finish-title {
+  font-family: var(--font-game);
+  font-size: clamp(2.5rem, 6vw, 3.8rem);
+  letter-spacing: 2px;
+  color: #ffffff;
+  line-height: 1;
+  margin-bottom: 0.8rem;
+}
+
+.finish-sub {
+  font-family: var(--font-tech);
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  letter-spacing: 1px;
+  margin-bottom: 1.8rem;
+  max-width: 440px;
+}
+
+.finish-clock {
+  font-family: var(--font-mono);
+  font-size: 3.5rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--accent-red);
+  text-shadow: 0 0 24px var(--accent-red-glow);
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .timer-viewport {
+    padding: 1.2rem 1.8rem 1rem;
+  }
+  .timer-hud-top::after {
+    width: 200px;
+  }
+  .hud-university-badge {
+    padding: 5px 18px;
+  }
+  .gehu-bhimtal-logo {
+    height: 42px;
+    max-width: 180px;
+  }
+  .sure-media-logo {
+    height: 42px;
+    max-width: 170px;
+  }
+  .hud-presenter-badge {
+    padding: 5px 18px;
+  }
+  .countdown-hero-logo {
+    height: clamp(50px, 7vh, 80px);
+  }
+  .partners-logo-badge {
+    padding: 7px 28px;
+  }
+  .sponsors-row-img {
+    height: 44px;
+    max-width: 520px;
+  }
+  .timer-bottom-left-dock {
+    bottom: 55px;
+    left: 20px;
+  }
+  .timer-bottom-right-dock {
+    bottom: 55px;
+    right: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .timer-viewport {
+    padding: 1rem 0.8rem 0.8rem;
+  }
+
+  .hud-brand-block {
+    gap: 0.6rem;
+  }
+
+  .hud-university-badge {
+    padding: 4px 14px;
+    border-radius: 6px;
+  }
+
+  .gehu-bhimtal-logo {
+    height: 36px;
+    max-width: 150px;
+  }
+
+  .hud-top-right-group {
+    gap: 0.5rem;
+  }
+
+  .hud-presenter-badge {
+    padding: 4px 14px;
+    border-radius: 6px;
+  }
+
+  .sure-media-logo {
+    height: 36px;
+    max-width: 140px;
+  }
+
+  .hud-brand-crest {
+    width: 32px;
+    height: 32px;
+  }
+
+  .spider-crest-svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .hud-brand-title {
+    font-size: 1.4rem;
+  }
+
+  .hud-brand-sub {
+    display: none;
+  }
+
+  .timer-terminal-card {
+    padding: 1.5rem 0.8rem 1.8rem;
+    border-radius: 12px;
+  }
+
+  .countdown-hero-logo {
+    height: clamp(45px, 6vh, 65px);
+  }
+
+  .terminal-heading {
+    font-size: 0.82rem;
+    letter-spacing: 2px;
+    margin-bottom: 1.2rem;
+  }
+
+  .countdown-clock-display {
+    gap: 6px;
+  }
+
+  .time-segment-box {
+    min-width: 0;
+    max-width: none;
+    flex: 1 1 0;
+  }
+
+  .digit-plate {
+    padding: 0.65rem 0.2rem;
+    border-radius: 8px;
+  }
+
+  .digit-value {
+    font-size: clamp(1.7rem, 6.5vw, 2.8rem);
+    letter-spacing: -0.5px;
+  }
+
+  .digit-unit {
+    font-size: clamp(0.55rem, 1.8vw, 0.72rem);
+    letter-spacing: 1.5px;
+    margin-top: 0.4rem;
+  }
+
+  .time-colon {
+    font-size: clamp(1.5rem, 5vw, 2.4rem);
+    margin-top: -0.6rem;
+  }
+
+  .bottom-center-partners {
+    width: 100%;
+  }
+
+  .partners-logo-badge {
+    padding: 6px 20px;
+  }
+
+  .sponsors-row-img {
+    height: 36px;
+    max-width: 420px;
+  }
+}
+
+@media (max-width: 420px) {
+  .timer-viewport {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .hud-brand-divider {
+    display: none;
+  }
+
+  .hud-brand-crest {
+    display: none;
+  }
+
+  .hud-brand-info {
+    display: none;
+  }
+
+  .hud-university-badge {
+    padding: 4px 10px;
+  }
+
+  .gehu-bhimtal-logo {
+    height: 30px;
+    max-width: 125px;
+  }
+
+  .sure-media-logo {
+    height: 30px;
+    max-width: 115px;
+  }
+
+  .hud-presenter-badge {
+    padding: 4px 10px;
+  }
+
+  .timer-terminal-card {
+    padding: 1.2rem 0.5rem 1.4rem;
+  }
+
+  .countdown-hero-logo {
+    height: 42px;
+  }
+
+  .countdown-clock-display {
+    gap: 4px;
+  }
+
+  .digit-plate {
+    padding: 0.5rem 0.15rem;
+  }
+
+  .digit-value {
+    font-size: clamp(1.4rem, 6.4vw, 1.9rem);
+  }
+
+  .time-colon {
+    font-size: 1.3rem;
+    margin-top: -0.4rem;
+  }
+
+  .partners-logo-badge {
+    padding: 5px 14px;
+  }
+
+  .sponsors-row-img {
+    height: 26px;
+    max-width: 310px;
+  }
+}

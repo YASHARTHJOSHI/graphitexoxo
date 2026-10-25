@@ -1,0 +1,9 @@
+# Scratch / temporary scripts
+check_*.py
+temp_*.html
+*.pyc
+__pycache__/
+.DS_Store
+Thumbs.db
+
+.vercel

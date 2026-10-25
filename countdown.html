@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <title>GRAPHITE '26 — Hackathon Arena Countdown</title>
+  <meta name="description" content="Official Hackathon Countdown Terminal for GRAPHITE '26 at Graphic Era Hill University, Bhimtal. Target: 27 Oct 2026, 10:00 AM IST.">
+  
+  <!-- Google Fonts: Bebas Neue, JetBrains Mono, Outfit, Rajdhani -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Rajdhani:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  
+  <link rel="stylesheet" href="countdown.css?v=20261025a">
+</head>
+<body class="countdown-body">
+
+  <!-- Ambient Cinematic Background Stage with Spider-Man Campus Video -->
+  <div class="countdown-bg-stage" aria-hidden="true">
+    <div class="video-bg-container">
+      <video id="countdownBgVideo" class="countdown-bg-video" playsinline webkit-playsinline x5-playsinline muted autoplay loop preload="auto" disablepictureinpicture disableremoteplayback poster="preview_frame.jpg">
+        <source src="IMG_0458_1080p.mp4" type="video/mp4">
+        <source src="IMG_0458.MOV" type="video/quicktime">
+        <source src="IMG_0458.MP4" type="video/mp4">
+        <source src="IMG_0448.mp4" type="video/mp4">
+      </video>
+      <div class="video-cinematic-dimmer"></div>
+    </div>
+    <div class="bg-gradient-glow red-glow"></div>
+    <div class="bg-gradient-glow cyan-glow"></div>
+    <div class="bg-grid-overlay"></div>
+    <div class="bg-scanlines"></div>
+    <div class="bg-vignette"></div>
+    <canvas id="timerParticleCanvas" class="timer-particle-canvas"></canvas>
+  </div>
+
+  <!-- Geometric Spiderweb Corner Accents -->
+  <div class="spider-corners" aria-hidden="true">
+    <div class="corner-web corner-tl">
+      <svg viewBox="0 0 200 200" class="web-svg">
+        <path class="web-spokes" d="M0,0 L195,0 M0,0 L188,50 M0,0 L168,97 M0,0 L138,138 M0,0 L97,168 M0,0 L50,188 M0,0 L0,195"></path>
+        <path class="web-rings" d="M35,0 Q31,4 33,9 Q28,12 30,17 Q25,19 24,24 Q19,25 17,30 Q12,29 9,33 Q4,31 0,35 M70,0 Q63,8 67,18 Q58,24 60,35 Q50,38 49,49 Q38,50 35,60 Q24,58 18,67 Q8,63 0,70 M110,0 Q99,13 105,28 Q92,38 95,55 Q79,61 78,78 Q61,79 55,95 Q38,92 28,105 Q13,99 0,110 M155,0 Q140,18 149,40 Q130,54 134,77 Q112,85 110,110 Q85,112 77,134 Q54,130 40,149 Q18,140 0,155 M195,0 Q176,23 188,50 Q164,68 168,97 Q141,108 138,138 Q108,141 97,168 Q68,164 50,188 Q23,176 0,195"></path>
+      </svg>
+    </div>
+    <div class="corner-web corner-tr">
+      <svg viewBox="0 0 200 200" class="web-svg">
+        <path class="web-spokes" d="M0,0 L195,0 M0,0 L188,50 M0,0 L168,97 M0,0 L138,138 M0,0 L97,168 M0,0 L50,188 M0,0 L0,195"></path>
+        <path class="web-rings" d="M35,0 Q31,4 33,9 Q28,12 30,17 Q25,19 24,24 Q19,25 17,30 Q12,29 9,33 Q4,31 0,35 M70,0 Q63,8 67,18 Q58,24 60,35 Q50,38 49,49 Q38,50 35,60 Q24,58 18,67 Q8,63 0,70 M110,0 Q99,13 105,28 Q92,38 95,55 Q79,61 78,78 Q61,79 55,95 Q38,92 28,105 Q13,99 0,110 M155,0 Q140,18 149,40 Q130,54 134,77 Q112,85 110,110 Q85,112 77,134 Q54,130 40,149 Q18,140 0,155 M195,0 Q176,23 188,50 Q164,68 168,97 Q141,108 138,138 Q108,141 97,168 Q68,164 50,188 Q23,176 0,195"></path>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Main Viewport Shell -->
+  <div class="timer-viewport">
+
+    <!-- Top HUD Bar -->
+    <header class="timer-hud-top">
+      <div class="hud-brand-block">
+        <a href="index.html" class="hud-university-link" title="Graphic Era Hill University, Bhimtal Campus — Return to Main Terminal">
+          <div class="hud-university-badge">
+            <img src="assets/gehu_bhimtal_logo.png" alt="Graphic Era Hill University, Bhimtal Campus" class="gehu-bhimtal-logo">
+          </div>
+        </a>
+      </div>
+
+      <!-- Live Mission Status Badge -->
+      <div class="hud-status-badge status-running" id="missionStatusBadge">
+        <span class="status-pulse-dot"></span>
+        <span class="status-text" id="missionStatusText">LIVE COUNTDOWN</span>
+      </div>
+
+      <!-- Top Right Presenter Badge -->
+      <div class="hud-top-right-group">
+        <div class="hud-presenter-badge" title="GRAPHITE '26 Presented by SURE MEDIA">
+          <img src="assets/sure_media_logo.png" alt="GRAPHITE '26 Presented by SURE MEDIA" class="sure-media-logo">
+        </div>
+      </div>
+    </header>
+
+    <!-- ========================================================
+         CENTER OF THE SCREEN: HACKATHON LAUNCH COUNTDOWN
+         ======================================================== -->
+    <main class="timer-center-stage">
+      
+      <!-- Center Terminal Frame -->
+      <div class="timer-terminal-card" id="timerTerminalCard">
+
+        <!-- Top of Countdown: Official GRAPHITE '26 Logo -->
+        <div class="countdown-hero-logo-box">
+          <img src="assets/graphite_countdown_logo.png" alt="GRAPHITE '26 — Hackathon at Altitude of 4494.75 ft — 27-28 October" class="countdown-hero-logo">
+        </div>
+
+        <h1 class="terminal-heading" id="terminalHeading">ROUND 2 ARENA // HACKATHON COUNTDOWN</h1>
+
+        <!-- Centerpiece Digital Countdown Display (DAYS : HOURS : MINS : SECS) -->
+        <div class="countdown-clock-display" id="countdownClockDisplay" role="timer" aria-live="polite" aria-atomic="true">
+          
+          <!-- Days Block -->
+          <div class="time-segment-box" id="segmentDays">
+            <div class="digit-plate">
+              <span class="digit-value" id="daysVal">00</span>
+            </div>
+            <span class="digit-unit">DAYS</span>
+          </div>
+
+          <!-- Colon Divider -->
+          <div class="time-colon" aria-hidden="true">:</div>
+
+          <!-- Hours Block -->
+          <div class="time-segment-box" id="segmentHours">
+            <div class="digit-plate">
+              <span class="digit-value" id="hoursVal">00</span>
+            </div>
+            <span class="digit-unit">HOURS</span>
+          </div>
+
+          <!-- Colon Divider -->
+          <div class="time-colon" aria-hidden="true">:</div>
+
+          <!-- Minutes Block -->
+          <div class="time-segment-box" id="segmentMins">
+            <div class="digit-plate">
+              <span class="digit-value" id="minsVal">00</span>
+            </div>
+            <span class="digit-unit">MINUTES</span>
+          </div>
+
+          <!-- Colon Divider -->
+          <div class="time-colon" aria-hidden="true">:</div>
+
+          <!-- Seconds Block -->
+          <div class="time-segment-box" id="segmentSecs">
+            <div class="digit-plate">
+              <span class="digit-value" id="secsVal">00</span>
+            </div>
+            <span class="digit-unit">SECONDS</span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- Bottom Left Corner: Arena Sequence Trigger (Spider-Verse HUD Theme) -->
+    <div class="timer-bottom-left-control">
+      <button type="button" class="btn-arena-start" id="arenaStartBtn" title="Start Hackathon Sequence (30M Briefing → 24H Sprint)" aria-label="Start Sequence">
+        <span class="btn-pulse-glow" aria-hidden="true"></span>
+        <svg class="btn-start-icon" viewBox="0 0 24 24" fill="currentColor">
+          <polygon points="5 3 19 12 5 21 5 3"></polygon>
+        </svg>
+        <span class="btn-start-text" id="arenaStartLabel">START</span>
+      </button>
+    </div>
+
+    <!-- Bottom HUD Bar: Community & Platform Partners -->
+    <footer class="timer-hud-bottom">
+      <div class="bottom-center-partners" aria-label="Hackathon Platform Partners">
+        <div class="partners-row-label">PLATFORM & COMMUNITY PARTNERS</div>
+        <div class="partners-logo-badge">
+          <img src="assets/sponsors_row_logo.png" alt="Hackathon Partners: Miro, n8n, .xyz, Mastra, Hacknest" class="sponsors-row-img">
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Finish / Time Complete Overlay Announcement -->
+  <div class="countdown-finish-overlay" id="finishOverlay" aria-hidden="true" style="display: none;">
+    <div class="finish-dialog-card">
+      <div class="finish-badge">MISSION LAUNCHED</div>
+      <h2 class="finish-title">HACKATHON IS LIVE!</h2>
+      <p class="finish-sub">THE COUNTDOWN HAS REACHED ZERO. GRAPHITE '26 ROUND 2 AT GEHU BHIMTAL HAS OFFICIALLY BEGUN!</p>
+      <div class="finish-clock">00:00:00</div>
+    </div>
+  </div>
+
+  <script src="countdown.js?v=20261024d"></script>
+</body>
+</html>
